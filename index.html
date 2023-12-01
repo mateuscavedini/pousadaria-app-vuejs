@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pousadaria App VueJS</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+    <header>
+      <p><a href="#" v-on:click="getAllGuesthouses()">Pousadaria Vue.js</a></p>
+    </header>
+
+    <section id="guesthouses-index" v-if="currentPage == 'guesthousesIndex'">
+      <h1>Pousadas Disponíveis</h1>
+
+      <input v-model="searchText" type="text" placeholder="Pesquisar">
+
+      <p v-if="listResult.length == 0">Não há pousadas a serem exibidas.</p>
+
+      <dl v-for="guesthouse in listResult">
+        <dt>Nome:</dt>
+        <dd><a href="#" v-on:click="getGuesthouseDetails(guesthouse.id)">{{ guesthouse.tradingName }}</a></dd>
+        <dt>Cidade:</dt>
+        <dd>{{ guesthouse.city }}</dd>
+      </dl>
+    </section>
+
+    <section id="guesthouse-details" v-if="currentPage == 'guesthouseDetails'">
+      <h1>Detalhes - {{ guesthouse.tradingName }}</h1>
+  
+      <dl>
+        <dt>Nome:</dt>
+        <dd>{{ guesthouse.tradingName }}</dd>
+        <dt>Descrição:</dt>
+        <dd>{{ guesthouse.description }}</dd>
+        <dt>Permite Pets?</dt>
+        <dd>{{ guesthouse.allowPets }}</dd>
+        <dt>Políticas de Uso:</dt>
+        <dd>{{ guesthouse.usagePolicy }}</dd>
+        <dt>Horário de Check In:</dt>
+        <dd>{{ guesthouse.checkIn }}</dd>
+        <dt>Horário de Check Out:</dt>
+        <dd>{{ guesthouse.checkOut }}</dd>
+        <dt>Formas de Pagamento:</dt>
+        <dd>{{ guesthouse.paymentMethods }}</dd>
+        <div v-if="guesthouse.averageRating">
+          <dt>Nota Média de Avaliação:</dt>
+          <dd>{{ guesthouse.averageRating }}</dd>
+        </div>
+        <dt>Nome da Rua:</dt>
+        <dd>{{ guesthouse.streetName }}</dd>
+        <dt>Número:</dt>
+        <dd>{{ guesthouse.streetNumber }}</dd>
+        <div v-if="guesthouse.complement">
+          <dt>Complemento:</dt>
+          <dd>{{ guesthouse.complement }}</dd>
+        </div>
+        <dt>Bairro:</dt>
+        <dd>{{ guesthouse.district }}</dd>
+        <dt>Cidade:</dt>
+        <dd>{{ guesthouse.city }}</dd>
+        <dt>Estado:</dt>
+        <dd>{{ guesthouse.state }}</dd>
+        <dt>CEP:</dt>
+        <dd>{{ guesthouse.postalCode }}</dd>
+      </dl>
+      
+      <section id="guesthouse-rooms">
+        <h2>Quartos Disponíveis</h2>
+
+        <p v-if="allRooms.length == 0">Não há quartos a serem exibidos.</p>
+        
+        <dl v-for="room, index in allRooms">
+          <dt>Nome:</dt>
+          <dd><a href="#" v-on:click="getRoomDetails(index)">{{ room.name }}</a></dd>
+          <dt>Descrição:</dt>
+          <dd>{{ room.description }}</dd>
+          <dt>Área:</dt>
+          <dd>{{ room.area }}m²</dd>
+          <dt>Diária:</dt>
+          <dd>R$ {{ room.dailyRate }}</dd>
+        </dl>
+      </section>
+    </section>
+
+    <section id="room-details" v-if="currentPage == 'roomDetails'">
+      <h1>Detalhes - {{ room.name }}</h1>
+
+      <dl>
+        <dt>Nome:</dt>
+        <dd>{{ room.name }}</dd>
+        <dt>Descrição:</dt>
+        <dd>{{ room.description }}</dd>
+        <dt>Área:</dt>
+        <dd>{{ room.area }}m²</dd>
+        <dt>Diária:</dt>
+        <dd>R$ {{ room.dailyRate }}</dd>
+      </dl>
+
+      <section id="booking-form">
+        <div>
+          <label for="startDate">Data Inicial: </label>
+          <input v-model="startDate" type="date" id="startDate">
+        </div>
+        <div>
+          <label for="finishDate">Data Final: </label>
+          <input v-model="finishDate" type="date" id="finishDate">
+        </div>
+        <div>
+          <label for="guestsNumber">Quantidade de Hóspedes: </label>
+          <input v-model="guestsNumber" type="number" id="guestsNumber">
+        </div>
+        <div>
+          <button v-on:click="validateBooking(room.id)">Verificar Reserva</button>
+        </div>
+      </section>
+      
+      <div v-if="totalPrice.length > 0">
+        <p>Total a pagar: R$ {{ totalPrice }}</p>
+      </div>
+      <div v-if="errors.length > 0">
+        <p>Não foi possível validar a reserva.</p>
+        <ul v-for="error in errors">
+          <li>{{ error }}</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
